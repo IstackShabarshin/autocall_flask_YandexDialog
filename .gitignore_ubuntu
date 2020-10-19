@@ -1,0 +1,25 @@
+# Files ignoring by git--------------------------------------
+
+# Ubuntu's system files
+*.swp
+
+# Tmp's files: socket
+/tmp
+
+# Python's binary files
+*.pyc
+__pycache__
+
+# Python's venv files
+/env
+
+# Git's systems files
+*.git
+*.gitignore
+
+# Session files
+/app/data/session.db
+
+# Non-ignoring files-----------------------------------------
+
+
