@@ -28,7 +28,7 @@ def insertSession(id, state):
         cursor = conn.cursor()
         deleteDeath(conn, cursor)
         sql = "INSERT INTO sessions VALUES (?, ?, ?)"
-        cursor.execute(sql, [str(id), str(state), time.clock() + LIFETIME])
+        cursor.execute(sql, [str(id), str(state), time.time() + LIFETIME])
         conn.commit()
 
 def changeState(id, state):
@@ -51,4 +51,14 @@ def deleteSession(id):
 def deleteDeath(conn, cursor):
     with conn:
         sql = "DELETE FROM sessions WHERE life_time < ?"
-        cursor.execute(sql, [time.clock()])
+        cursor.execute(sql, [time.time()])
+        conn.commit()
+
+def _selectAll():
+    conn = sqlite3.connect(DATABASE)
+    with conn:
+        cursor = conn.cursor()
+        sql = "SELECT * FROM sessions"
+        cursor.execute(sql)
+        #conn.commit()
+        return cursor.fetchall()
