@@ -93,18 +93,15 @@ class autocall(StackFSM):
         return 'Добрый день! Вас соединить с соотрудником или отделом?'
     
     def stateA_start(self, request):
-        #tokens = Normalize(request) # разбитие на токены в инфинитиве
-        print('start_split')
-        tokens = SplitOnLemmas(request)
-        print('stop_split')
+        tokens = request.split(' ')
         for word in tokens: # TODO: * -> inf
             #word = token.text
-            if word == 'отдел':
+            if word.startswith('отдел'):
                 self.popState()
                 self.pushState(self.stateB_dep)
                 self.updateFile()
                 return 'Назовите название или номер отдела'
-            elif word == 'соотрудник' or word == 'соотрудника' or word == 'соотрудницу' or  word == 'соотрудником':
+            elif word.startswith('соотрудник'):
                 self.popState()
                 self.pushState(self.stateC_per)
                 self.updateFile()
@@ -152,17 +149,17 @@ class autocall(StackFSM):
     
     
     def stateE_connect_error(self, request):
-        segments = Normalize(request) # разбитие на токены в инфинитиве
-        for word in segments:
-            if word.text.lower() == 'да':
+        tokens = request.split(' ')
+        for word in tokens:
+            if word.startswith('да'):
                 self.popState()
                 self.pushState(self.stateA_start)
                 self.updateFile()
                 return 'Вас соединить с соотрудником или отделом?'
-            else:
-                self.popState()
-                self.removeStack()
-                return "До свидания"
+
+        self.popState()
+        self.removeStack()
+        return "До свидания"
 
 
 # In[ ]:
