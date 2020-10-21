@@ -8,9 +8,16 @@ def createTable():
     conn = sqlite3.connect(DATABASE)
     with conn:
         cursor = conn.cursor()
-        cursor.execute(""" CREATE TABLE sessions
+        cursor.execute(""" CREATE TABLE IF NOT EXISTS sessions
                        (id text, state text, life_time integer)
                        """)
+        conn.commit()
+
+def deleteTable():
+    conn = sqlite3.connect(DATABASE)
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute(""" TRUNCATE TABLE sessions """)
         conn.commit()
 
 def selectId(id):
@@ -60,5 +67,4 @@ def _selectAll():
         cursor = conn.cursor()
         sql = "SELECT * FROM sessions"
         cursor.execute(sql)
-        #conn.commit()
         return cursor.fetchall()
