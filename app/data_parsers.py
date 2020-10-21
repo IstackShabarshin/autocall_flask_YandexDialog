@@ -194,7 +194,7 @@ def find_department(response):
     table_dep = pd.read_json(ADDRESS_DEPARTMENTS)
     table_pers = pd.read_json(ADDRESS_PERSONS)
     #segments = Normalize(response) # разбитие на токены в инфинитиве
-    segments = response.split(' ')
+    segments = response.lower().split(' ')
 
     # поиск по ключам
     list_keys_dep = table_dep['Ключи'].values
