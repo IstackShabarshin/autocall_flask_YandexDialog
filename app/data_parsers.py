@@ -193,21 +193,26 @@ def delete_session_in_file(autocall_class):
 def find_department(response):
     table_dep = pd.read_json(ADDRESS_DEPARTMENTS)
     table_pers = pd.read_json(ADDRESS_PERSONS)
-    segments = Normalize(response) # разбитие на токены в инфинитиве
+    #segments = Normalize(response) # разбитие на токены в инфинитиве
+    segments = response.split(' ')
 
     # поиск по ключам
     list_keys_dep = table_dep['Ключи'].values
     for word in segments:
-        for key in list_keys_dep:
-            splited_key = key.split(';')
-            if word.lower() in splited_key:
-                cur_row_dep = table_dep.loc[table_dep['Ключи'] == key]
-                number = cur_row_dep.iloc[0]['Руководитель']
+        for key_dep in list_keys_dep:
+            if key_dep.find(';') != -1:
+                splited_key = key_dep.split('; ')[:-1]
+            else:
+                splited_key = [key_dep]
+            for key in splited_key:
+                if word.startswith(key[:-2]):
+                    cur_row_dep = table_dep.loc[table_dep['Ключи'] == key_dep]
+                    number = cur_row_dep.iloc[0]['Руководитель']
 
-                currect_row_pers = table_pers.loc[number]
-                fio = currect_row_pers['Фамилия'] + ' ' +                     currect_row_pers['Имя'] + ' ' +                     currect_row_pers['Отчество']
+                    currect_row_pers = table_pers.loc[number]
+                    fio = currect_row_pers['Фамилия'] + ' ' + currect_row_pers['Имя'] + ' ' + currect_row_pers['Отчество']
 
-                return number, fio
+                    return number, fio
     return None, None
 
 
@@ -218,7 +223,7 @@ def find_num_person_from_table(numbers, table):
     for number in numbers:
         record = table.loc[number]
         if not record.empty:
-            fio = record['Фамилия'] + ' ' +                 record['Имя'] + ' ' +                 record['Отчество']
+            fio = record['Фамилия'] + ' ' + record['Имя'] + ' ' + record['Отчество']
             return number, fio
     return None, None
 
@@ -248,7 +253,7 @@ def find_num_person_by_name_from_table(name, table):
                 return None, None
 
     number = record.index[0]
-    fio = record.iloc[0]['Фамилия'] + ' ' +             record.iloc[0]['Имя'] + ' ' +             record.iloc[0]['Отчество']
+    fio = record.iloc[0]['Фамилия'] + ' ' + record.iloc[0]['Имя'] + ' ' + record.iloc[0]['Отчество']
     return number, fio
 
 ### Все от Наташи проверяется на фамилию таблицы
