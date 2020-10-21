@@ -79,8 +79,8 @@ class autocall(StackFSM):
    
     # Заглушка для передачи звонка Cisco
     def connect_to_Cisco(self, number): # TODO: передача cisco
-        return True
-#         return False
+#        return True
+         return False
     
     ###-----------------------------------------------------------------------------
     ### Реализация состояний
