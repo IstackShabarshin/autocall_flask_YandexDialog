@@ -64,7 +64,7 @@ def FindName_h(text):
     print('    Start FindName_h working:...')
     
     #Инициализация
-    print('        start initialize filled ' + str(time.clock() - time_start_h))
+    print('        start initialize filled ')
     segmenter = Segmenter()
     morph_vocab = MorphVocab()
     emb = NewsEmbedding()
