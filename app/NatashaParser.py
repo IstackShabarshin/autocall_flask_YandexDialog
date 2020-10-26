@@ -64,7 +64,7 @@ def FindName_h(text):
     print('    Start FindName_h working:...')
     
     #Инициализация
-    print('        start initialize filled ')
+    print('        start initialize neuronets ')
     segmenter = Segmenter()
     morph_vocab = MorphVocab()
     emb = NewsEmbedding()
@@ -72,7 +72,7 @@ def FindName_h(text):
     syntax_parser = NewsSyntaxParser(emb)
     ner_tagger = NewsNERTagger(emb)
     names_extractor = NamesExtractor(morph_vocab)
-    print('        stop initialize filled ' + str(time.clock() - time_start_h))
+    print('        stop initialize neuronets ' + str(time.clock() - time_start_h))
     
     doc = Doc(text) #Инициализация структуры
     #display(doc)
