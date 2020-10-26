@@ -43,8 +43,8 @@ def changeState(id, state):
     with conn:
         cursor = conn.cursor()
         deleteDeath(conn, cursor)
-        sql = "UPDATE sessions SET state = ? WHERE id = ?" 
-        cursor.execute(sql, [state, id])
+        sql = "UPDATE sessions SET state = ?, life_time = ? WHERE id = ?" 
+        cursor.execute(sql, [state, time.time() + LIFETIME ,id])
         conn.commit()
 
 def deleteSession(id):
