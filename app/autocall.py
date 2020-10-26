@@ -20,6 +20,8 @@ from app.NatashaParser import (
     SplitOnLemmas
 )
 
+import time # для debug
+
 
 ###-----------------------------------------------------------------------------
 ### Реализация автомата
@@ -117,24 +119,34 @@ class autocall(StackFSM):
             return "Извините, не удалось найти такого отдела"
         
     def stateC_per(self, request):
+        time_start = time.clock()
+        print('Start stateC working:...')
         table = read_json(parser.ADDRESS_PERSONS)
 
         #Сначала ищем номера сотрудников, если они есть
+        print('    start finding nums ' + str(time.clock() - time_start))
         potention_numbers = SplitOnSegments(request)
         potention_numbers = [int(_.text) for _ in potention_numbers if _.text.isdigit()]
         number, fio = parser.find_num_person_from_table(potention_numbers, table)
+        print('    stop finding nums ' + str(time.clock() - time_start))
         if number != None:
+            print('    out with found num ' + str(time.clock() - time_start))
             return self.stateD_connect(number, fio)
         
         #Теперь ищем FIO
+        print('    start finding names by Natasha ' + str(time.clock() - time_start))
         names = FindNames(request) # парсим на имена
 #         print('Имена, которые нашла Наташа: \n' + str(names)) #debug
 #         print('\n' + str(len(names)) + '\n') #debug
+        print('    stop finding names ' + str(time.clock() - time_start))
+        
         
         for name in names.items():
             number, fio = parser.find_num_person_by_name_from_table(name[1], table) #To do: только фамилии
             if fio != None:
+                print('    out with name ' + str(time.clock() - time_start))
                 return self.stateD_connect(number, fio)
+        print('    out without name ' + str(time.clock() - time_start))
         return "Извините, не удалось найти такого соотрудника"
     
     def stateD_connect(self, number, fio):

@@ -21,6 +21,8 @@ from natasha import (
     Doc
 )
 
+import time #для debug
+
 # Вспомогательная функция вызова поисков по файлам/текстам
 def fileOrNot(fileNameOrText, func, IsFile = False):
     if IsFile:
@@ -57,8 +59,12 @@ def SplitOnLemmas(text):
     return [_.lemma for _ in doc.tokens]
 
 # Вспомогательная функция поиска имен
-def FindName_h(text):   
+def FindName_h(text):
+    time_start_h = time.clock()
+    print('    Start FindName_h working:...')
+    
     #Инициализация
+    print('        start initialize filled ' + str(time.clock() - time_start_h))
     segmenter = Segmenter()
     morph_vocab = MorphVocab()
     emb = NewsEmbedding()
@@ -66,25 +72,30 @@ def FindName_h(text):
     syntax_parser = NewsSyntaxParser(emb)
     ner_tagger = NewsNERTagger(emb)
     names_extractor = NamesExtractor(morph_vocab)
+    print('        stop initialize filled ' + str(time.clock() - time_start_h))
     
     doc = Doc(text) #Инициализация структуры
     #display(doc)
     
     doc.segment(segmenter) #Добавляет поля sents and tokens (предложения и "слова")
     #display(doc)
+    print('        start fields filled ' + str(time.clock() - time_start_h))
     
     doc.tag_morph(morph_tagger) #Морфологический разбор
     doc.parse_syntax(syntax_parser) #Синтаксический разбор
     #display(doc)
     #|||||||||||||||Добавляют поля id, pos, feats, head_id, rel
+    print('        after sync and morph analysis ' + str(time.clock() - time_start_h))
     
     doc.tag_ner(ner_tagger) #Добавляет поле Spans (значения PER, LOC, ORG)
     #display(doc.spans)
+    print('        after context analysis ' + str(time.clock() - time_start_h))
     
     #Нормализация - приводит к именительному падежу
     for span in doc.spans:
         span.normalize(morph_vocab)
 #     display(doc.spans)
+    print('        after normalization ' + str(time.clock() - time_start_h))
     
     #Мудреная выборка из spans имен
     for span in doc.spans:
@@ -92,6 +103,7 @@ def FindName_h(text):
             span.extract_fact(names_extractor)
     
     res = {_.normal: _.fact.as_dict for _ in doc.spans if _.fact}
+    print('        end FindName_h ' + str(time.clock() - time_start_h))
     return res
 
 # Вспомогательная функция поиска дат
