@@ -43,14 +43,6 @@ def fileOrNot(fileNameOrText, func, IsFile = False):
     else:
         return func(fileNameOrText)
 
-#
-def SplitOnSegments(text):
-    segmenter = Segmenter()
-    doc = Doc(text)
-    doc.segment(segmenter) #Добавляет поля sents and tokens (предложения и "слова")
-    #display(doc)
-    return list(doc.tokens)
-
 def SplitOnLemmas(text):
     doc = Doc(text)
 
@@ -142,6 +134,13 @@ def FindDates(fileNameOrText, IsFile = False):
 # Поиск адресов в файле/тексте
 def FindAddrs(fileNameOrText, IsFile = False):
     return fileOrNot(fileNameOrText, FindAddr_h, IsFile)
+
+# для разбиения на токены сообщений
+def SplitOnSegments(text):
+    doc = Doc(text)
+    doc.segment(segmenter) #Добавляет поля sents and tokens (предложения и "слова")
+    #display(doc)
+    return list(doc.tokens)
 
 # Нормализация - приводит к именительному падежу
 def Normalize(text):

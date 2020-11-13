@@ -1,3 +1,3 @@
-from main import main
+from natasha_server import start_listennig
 
-main()
+start_listennig()
