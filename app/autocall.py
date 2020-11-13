@@ -128,12 +128,13 @@ class autocall(StackFSM):
             return self.stateD_connect(number, fio)
         
         #Теперь ищем FIO
-        name = conn_natasha(request, '-fn') # парсим на имена через natasha_server
+        name_list = conn_natasha(request, '-fn') # парсим на имена через natasha_server
+        name_dict = {'last': name_list[0], 'middle': name_list[1], 'first': name_list[2]}
 #         print('Имена, которые нашла Наташа: \n' + str(names)) #debug
 #         print('\n' + str(len(names)) + '\n') #debug
         
         #for name in names.items():
-        number, fio = parser.find_num_person_by_name_from_table(name[0], table) #To do: только фамилии
+        number, fio = parser.find_num_person_by_name_from_table(name_dict, table) #To do: только фамилии
         if fio != None:
             return self.stateD_connect(number, fio)
         return "Извините, не удалось найти такого соотрудника"
