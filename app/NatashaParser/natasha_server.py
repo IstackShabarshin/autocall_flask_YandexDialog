@@ -1,11 +1,12 @@
 import os, socket
-from parser import (
-    FindNames,
-    FindDates,
-    FindAddrs,
-    Normalize,
-    SplitOnSegments
-)
+import parser
+#from parser import (
+#    SplitOnSegments,
+#    FindNames,
+#    FindDates,
+#    FindAddrs,
+#    Normalize
+#)
 
 SOCKET_FILE = './tmp/natasha.socket'
 
@@ -40,37 +41,38 @@ def start_listennig():
     server.bind(SOCKET_FILE)
     server.listen(1)
 
-    print("Lictenning...")
+    print("Lictenning...", flush=True)
     try:
         while True:
             try:
-                print("Open new connect")
                 conn, _ = server.accept()
+                print("Open new connect", flush=True)
                 string = conn.recv(1024).decode()
                 param = conn.recv(1024).decode()
-                if not string or not param:
-                    break
-                else:
-                    raise ValueError(string)
+                #print(string + param, flush=True)
+                if not string:
+                    raise ValueError("string - " + string)
+                if not param:
+                    raise ValueError("param - " + string)
 
                 #param parsing
                 if param == '-n': #Normalize
-                    request = Normalize(string)
+                    request = parser.Normalize(string)
                 elif param == '-s': #Segments
-                    request = SplitOnSegments(string)
+                    request = parser.SplitOnSegments(string)
                 elif param == '-fn': #FindNames
-                    request = FindNames(string)
+                    request = parser.FindNames(string)
                 elif param == '-fd': #FindDates
-                    request = FindDates(string)
+                    request = parser.FindDates(string)
                 elif param == '-fa': #FindAddrs
-                    request = FindAddrs(string)
+                    request = parser.FindAddrs(string)
                 else:
                     raise ValueError(param)
 
                 for elem in request:
                     conn.send(elem.encode())
             finally:
-                print("Close connect")
+                print("Close connect", flush=True)
                 conn.close()
     finally:
         print("Closing server...");

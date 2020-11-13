@@ -9,11 +9,11 @@
 ###-----------------------------------------------------------------------------
 
 import pandas as pd # для работы с файлами
-from app.NatashaParser import (
-    FindNames, # поиск имен в сообщений
-    SplitOnSegments, # для разбиения на токены сообщений
-    Normalize # для приведения к инфинитиву
-)
+#from app.NatashaParser import (
+#    FindNames, # поиск имен в сообщений
+#    SplitOnSegments, # для разбиения на токены сообщений
+#    Normalize # для приведения к инфинитиву
+#)
 
 # Игнорируем предупреждения о типах в pandas (проблемы pandas)
 import warnings

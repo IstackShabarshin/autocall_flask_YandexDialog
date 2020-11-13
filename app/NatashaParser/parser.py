@@ -76,9 +76,10 @@ def FindName_h(text):
     for span in doc.spans:
         if span.type == PER:
             span.extract_fact(names_extractor)
-    
+
+    doc.spans = doc.spans[0]
     res = {_.normal: _.fact.as_dict for _ in doc.spans if _.fact}
-    return res
+    return res #TODO: ITS VERY BAD
 
 # Вспомогательная функция поиска дат
 def FindDate_h(text):
@@ -110,7 +111,7 @@ def SplitOnSegments(text):
     doc = Doc(text)
     doc.segment(segmenter) #Добавляет поля sents and tokens (предложения и "слова")
     #display(doc)
-    return list(doc.tokens)
+    return [_.text for _ in doc.tokens]
 
 # Нормализация - приводит к именительному падежу
 def Normalize(text):

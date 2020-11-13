@@ -19,7 +19,7 @@ from app.StackFSM import StackFSM # для реализации автомата
 #    Normalize,  # для приведения к инфинитиву
 #    SplitOnLemmas
 #)
-import app.NatashaParser.natasha_server import conn_natasha
+from app.NatashaParser.natasha_server import conn_natasha
 
 
 ###-----------------------------------------------------------------------------
@@ -122,20 +122,20 @@ class autocall(StackFSM):
 
         #Сначала ищем номера сотрудников, если они есть
         potention_numbers = conn_natasha(request, '-s') #Connect to natasha_server for execute SplitOnSegments
-        potention_numbers = [int(_.text) for _ in potention_numbers if _.text.isdigit()]
+        potention_numbers = [int(_) for _ in potention_numbers if _.isdigit()]
         number, fio = parser.find_num_person_from_table(potention_numbers, table)
         if number != None:
             return self.stateD_connect(number, fio)
         
         #Теперь ищем FIO
-        names = conn_natasha(, '-fn') # парсим на имена через natasha_server
+        name = conn_natasha(request, '-fn') # парсим на имена через natasha_server
 #         print('Имена, которые нашла Наташа: \n' + str(names)) #debug
 #         print('\n' + str(len(names)) + '\n') #debug
         
-        for name in names.items():
-            number, fio = parser.find_num_person_by_name_from_table(name[1], table) #To do: только фамилии
-            if fio != None:
-                return self.stateD_connect(number, fio)
+        #for name in names.items():
+        number, fio = parser.find_num_person_by_name_from_table(name[0], table) #To do: только фамилии
+        if fio != None:
+            return self.stateD_connect(number, fio)
         return "Извините, не удалось найти такого соотрудника"
     
     def stateD_connect(self, number, fio):
