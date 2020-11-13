@@ -126,10 +126,18 @@ class autocall(StackFSM):
         number, fio = parser.find_num_person_from_table(potention_numbers, table)
         if number != None:
             return self.stateD_connect(number, fio)
-        
+
         #Теперь ищем FIO
         name_list = conn_natasha(request, '-fn') # парсим на имена через natasha_server
-        name_dict = {'last': name_list[0], 'middle': name_list[1], 'first': name_list[2]}
+        if len(name_list) == 0:
+            return "Извините, не удалось найти такого соотрудника"
+        if len(name_list) >= 1:
+            name_dict = {'last': name_list[0]}
+        if len(name_list) >= 2:
+            name_dict.update({'middle': name_list[1]})
+        if len(name_list) >= 3:
+            name_dict.update({'first': name_list[2]})
+        #name_dict = {'last': name_list[0], 'middle': name_list[1], 'first': name_list[2]}
 #         print('Имена, которые нашла Наташа: \n' + str(names)) #debug
 #         print('\n' + str(len(names)) + '\n') #debug
         
