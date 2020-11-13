@@ -3,7 +3,8 @@ from parser import (
     FindNames,
     FindDates,
     FindAddrs,
-    Normalize
+    Normalize,
+    SplitOnSegments
 )
 
 SOCKET_FILE = './tmp/natasha.socket'
@@ -55,6 +56,8 @@ def start_listennig():
                 #param parsing
                 if param == '-n': #Normalize
                     request = Normalize(string)
+                elif param == '-s': #Segments
+                    request = SplitOnSegments(string)
                 elif param == '-fn': #FindNames
                     request = FindNames(string)
                 elif param == '-fd': #FindDates

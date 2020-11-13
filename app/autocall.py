@@ -13,12 +13,13 @@ from pandas import(
 )
 import app.data_parsers as parser # для работы с таблицами таблиц 
 from app.StackFSM import StackFSM # для реализации автомата 
-from app.NatashaParser import (
-    FindNames, # поиск имен в сообщений
-    SplitOnSegments, # для разбиения на токены сообщений
-    Normalize,  # для приведения к инфинитиву
-    SplitOnLemmas
-)
+#from app.NatashaParser import (
+#    FindNames, # поиск имен в сообщений
+#    SplitOnSegments, # для разбиения на токены сообщений
+#    Normalize,  # для приведения к инфинитиву
+#    SplitOnLemmas
+#)
+import app.NatashaParser.natasha_server import conn_natasha
 
 
 ###-----------------------------------------------------------------------------
@@ -120,14 +121,14 @@ class autocall(StackFSM):
         table = read_json(parser.ADDRESS_PERSONS)
 
         #Сначала ищем номера сотрудников, если они есть
-        potention_numbers = SplitOnSegments(request)
+        potention_numbers = conn_natasha(request, '-s') #Connect to natasha_server for execute SplitOnSegments
         potention_numbers = [int(_.text) for _ in potention_numbers if _.text.isdigit()]
         number, fio = parser.find_num_person_from_table(potention_numbers, table)
         if number != None:
             return self.stateD_connect(number, fio)
         
         #Теперь ищем FIO
-        names = FindNames(request) # парсим на имена
+        names = conn_natasha(, '-fn') # парсим на имена через natasha_server
 #         print('Имена, которые нашла Наташа: \n' + str(names)) #debug
 #         print('\n' + str(len(names)) + '\n') #debug
         

@@ -21,7 +21,7 @@ from natasha import (
     Doc
 )
 
-import time #для debug
+# Инициализация сетей
 
 segmenter = Segmenter()
 morph_vocab = MorphVocab()
@@ -45,57 +45,32 @@ def fileOrNot(fileNameOrText, func, IsFile = False):
 
 def SplitOnLemmas(text):
     doc = Doc(text)
-
-    segment = Segmenter()
-    doc.segment(segment)
-
-    emb = NewsEmbedding()
-    morph_tagger = NewsMorphTagger(emb)
     doc.tag_morph(morph_tagger)
-
-    morph_vocab = MorphVocab()
+    
     for token in doc.tokens:
         token.lemmatize(morph_vocab)
     return [_.lemma for _ in doc.tokens]
 
 # Вспомогательная функция поиска имен
 def FindName_h(text):
-    time_start_h = time.clock()
-    print('    Start FindName_h working:...')
-    
-    #Инициализация
-    print('        start initialize neuronets ')
-    segmenter = Segmenter()
-    morph_vocab = MorphVocab()
-    emb = NewsEmbedding()
-    morph_tagger = NewsMorphTagger(emb)
-    syntax_parser = NewsSyntaxParser(emb)
-    ner_tagger = NewsNERTagger(emb)
-    names_extractor = NamesExtractor(morph_vocab)
-    print('        stop initialize neuronets ' + str(time.clock() - time_start_h))
-    
     doc = Doc(text) #Инициализация структуры
     #display(doc)
     
     doc.segment(segmenter) #Добавляет поля sents and tokens (предложения и "слова")
     #display(doc)
-    print('        start fields filled ' + str(time.clock() - time_start_h))
     
     doc.tag_morph(morph_tagger) #Морфологический разбор
     doc.parse_syntax(syntax_parser) #Синтаксический разбор
     #display(doc)
     #|||||||||||||||Добавляют поля id, pos, feats, head_id, rel
-    print('        after sync and morph analysis ' + str(time.clock() - time_start_h))
     
     doc.tag_ner(ner_tagger) #Добавляет поле Spans (значения PER, LOC, ORG)
     #display(doc.spans)
-    print('        after context analysis ' + str(time.clock() - time_start_h))
     
     #Нормализация - приводит к именительному падежу
     for span in doc.spans:
         span.normalize(morph_vocab)
 #     display(doc.spans)
-    print('        after normalization ' + str(time.clock() - time_start_h))
     
     #Мудреная выборка из spans имен
     for span in doc.spans:
@@ -103,21 +78,16 @@ def FindName_h(text):
             span.extract_fact(names_extractor)
     
     res = {_.normal: _.fact.as_dict for _ in doc.spans if _.fact}
-    print('        end FindName_h ' + str(time.clock() - time_start_h))
     return res
 
 # Вспомогательная функция поиска дат
 def FindDate_h(text):
-    segmenter = Segmenter()
-    morph_vocab = MorphVocab()
     dates_extractor = DatesExtractor(morph_vocab)
 
     return list(dates_extractor(text))
 
 # Вспомогательая функия поиска адресов
 def FindAddr_h(text):
-    segmenter = Segmenter()
-    morph_vocab = MorphVocab()
     addr_extractor = AddrExtractor(morph_vocab)
     
     return list(addr_extractor(text))
