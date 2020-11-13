@@ -1,1 +1,1 @@
-from NatashaParser import main
+

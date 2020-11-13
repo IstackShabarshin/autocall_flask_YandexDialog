@@ -1,5 +1,5 @@
 import os, socket
-from NatashaParser.parser import (
+from parser import (
     FindNames,
     FindDates,
     FindAddrs,
@@ -51,7 +51,7 @@ def main():
                     break
                 else:
                     raise ValueError(string)
-                
+
                 #param parsing
                 if param == '-n': #Normalize
                     request = Normalize(string)
@@ -63,7 +63,7 @@ def main():
                     request = FindAddrs(string)
                 else:
                     raise ValueError(param)
-                
+
                 for elem in request:
                     conn.send(elem.encode())
             finally:
