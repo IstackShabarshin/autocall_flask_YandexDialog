@@ -2,7 +2,7 @@
 import os
 import socket
 
-SOCKET_FILE = './echo.socket'
+SOCKET_FILE = './tmp/natasha.socket'
 
 print("Connecting...")
 if os.path.exists(SOCKET_FILE):

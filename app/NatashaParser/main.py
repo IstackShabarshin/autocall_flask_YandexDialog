@@ -1,7 +1,7 @@
 import os, socket
 import NatashaParser
 
-SOCKET_FILE = './echo.socket'
+SOCKET_FILE = './tmp/natasha.socket'
 
 if os.path.exists(SOCKET_FILE):
     os.remove(SOCKET_FILE)
