@@ -1,5 +1,6 @@
 import os, socket
 import parser
+import json
 #from parser import (
 #    SplitOnSegments,
 #    FindNames,
@@ -9,6 +10,31 @@ import parser
 #)
 
 SOCKET_FILE = './tmp/natasha.socket'
+
+def SplitOnSegments(string):
+    resp = conn_natasha(string, '-n')
+    resp = json.loads(resp.replace("'", '"'))
+    return resp
+    
+def Normalize(string):
+    resp = conn_natasha(string, '-s')
+    resp = json.loads(resp.replace("'", '"'))
+    return resp
+    
+def FindNames(string):
+    resp = conn_natasha(string, '-fn')
+    resp = json.loads(resp.replace("'", '"'))
+    return resp
+    
+def FindDates(string):
+    resp = conn_natasha(string, '-fd')
+    resp = json.loads(resp.replace("'", '"'))
+    return resp
+    
+def FindAddrs(string):
+    resp = conn_natasha(string, '-fa')
+    resp = json.loads(resp.replace("'", '"'))
+    return resp
 
 def conn_natasha(string, param):
     print("Connecting...")
@@ -20,15 +46,10 @@ def conn_natasha(string, param):
             client.send(string.encode())
             client.send(param.encode())
 
-            result = []
             resp = client.recv(1024).decode()
-            result.append(resp)
-            while (len(resp) > 0):
-                resp = client.recv(1024).decode()
-                result.append(resp)
         finally:
             client.close()
-            return result
+            return resp
     else:
         raise FileNotFoundError(SOCKET_FILE)
 

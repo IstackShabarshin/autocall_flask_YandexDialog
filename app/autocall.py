@@ -13,14 +13,13 @@ from pandas import(
 )
 import app.data_parsers as parser # для работы с таблицами таблиц 
 from app.StackFSM import StackFSM # для реализации автомата 
-#from app.NatashaParser import (
-#    FindNames, # поиск имен в сообщений
-#    SplitOnSegments, # для разбиения на токены сообщений
-#    Normalize,  # для приведения к инфинитиву
-#    SplitOnLemmas
-#)
-from app.NatashaParser.natasha_server import conn_natasha
-import json
+from app.NatashaParser.natasha_server import (
+    FindNames, # поиск имен в сообщений
+    SplitOnSegments, # для разбиения на токены сообщений
+    Normalize,  # для приведения к инфинитиву
+)
+#from app.NatashaParser.natasha_server import conn_natasha
+#import json
 
 ###-----------------------------------------------------------------------------
 ### Реализация автомата
@@ -121,28 +120,16 @@ class autocall(StackFSM):
         table = read_json(parser.ADDRESS_PERSONS)
 
         #Сначала ищем номера сотрудников, если они есть
-        potention_numbers = conn_natasha(request, '-s') #Connect to natasha_server for execute SplitOnSegments
+        potention_numbers = SplitOnSegments(request) #Connect to natasha_server for execute SplitOnSegments
         potention_numbers = [int(_) for _ in potention_numbers if _.isdigit()]
         number, fio = parser.find_num_person_from_table(potention_numbers, table)
         if number != None:
             return self.stateD_connect(number, fio)
 
         #Теперь ищем FIO
-        name_list = conn_natasha(request, '-fn') # парсим на имена через natasha_server
-        print(name_list, flush=True)
-        if len(name_list) == 0:
-            return "Извините, не удалось найти такого соотрудника"
-        if len(name_list) >= 1:
-            name_dict = {'last': name_list[0]}
-        if len(name_list) >= 2:
-            name_dict.update({'middle': name_list[1]})
-        if len(name_list) >= 3:
-            name_dict.update({'first': name_list[2]})
-        #name_dict = {'last': name_list[0], 'middle': name_list[1], 'first': name_list[2]}
-#         print('Имена, которые нашла Наташа: \n' + str(names)) #debug
-#         print('\n' + str(len(names)) + '\n') #debug
+        name_dict = FindNames(request) # парсим на имена через natasha_server
+        print(name_dict, flush=True)
         
-        #for name in names.items():
         number, fio = parser.find_num_person_by_name_from_table(name_dict, table) #To do: только фамилии
         if fio != None:
             return self.stateD_connect(number, fio)
