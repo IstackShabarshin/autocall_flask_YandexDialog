@@ -20,7 +20,7 @@ from app.StackFSM import StackFSM # для реализации автомата
 #    SplitOnLemmas
 #)
 from app.NatashaParser.natasha_server import conn_natasha
-
+import json
 
 ###-----------------------------------------------------------------------------
 ### Реализация автомата
@@ -129,6 +129,7 @@ class autocall(StackFSM):
 
         #Теперь ищем FIO
         name_list = conn_natasha(request, '-fn') # парсим на имена через natasha_server
+        print(name_list, flush=True)
         if len(name_list) == 0:
             return "Извините, не удалось найти такого соотрудника"
         if len(name_list) >= 1:

@@ -49,7 +49,7 @@ def start_listennig():
                 print("Open new connect", flush=True)
                 string = conn.recv(1024).decode()
                 param = conn.recv(1024).decode()
-                #print(string + param, flush=True)
+                print('    Receving: ' + '\'' + string + '\'' + ' ' + param, flush=True)
                 if not string:
                     raise ValueError("string - " + string)
                 if not param:
@@ -70,7 +70,9 @@ def start_listennig():
                     raise ValueError(param)
 
                 for elem in request:
-                    conn.send(elem.encode())
+                    conn.send(str(elem).encode())
+                print('    Sending: ' + str(request), flush=True)
+
             finally:
                 print("Close connect", flush=True)
                 conn.close()
