@@ -76,11 +76,9 @@ def FindName_h(text):
     for span in doc.spans:
         if span.type == PER:
             span.extract_fact(names_extractor)
-    #if len(doc.spans) == 0 :
-       # return {}
-    #doc.spans = doc.spans[0]
+
     res = {_.normal: _.fact.as_dict for _ in doc.spans if _.fact}
-    return res #TODO: ITS VERY BAD
+    return res 
 
 # Вспомогательная функция поиска дат
 def FindDate_h(text):
