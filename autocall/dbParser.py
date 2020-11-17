@@ -1,7 +1,7 @@
 import sqlite3
 import time
 
-DATABASE = 'app/data/session.db'
+DATABASE = 'autocall/data/session.db'
 LIFETIME = 120 # время жизни записи в секундах
 
 def createTable():

@@ -1,4 +1,4 @@
-from app import app
+from autocall import app, views
 
 if __name__ == "__main__":
     app.run()

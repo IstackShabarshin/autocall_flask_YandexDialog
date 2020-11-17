@@ -3,7 +3,7 @@
 
 # In[1]:
 
-import app.autocall as fsm
+import autocall.autocaller as fsm
 
 def handler(state, text):
     ac = fsm.autocall(state)

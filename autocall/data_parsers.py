@@ -25,11 +25,11 @@ warnings.filterwarnings('ignore')
 ###-----------------------------------------------------------------------------
 
 
-ADDRESS_STACK = 'app/data/UsersStacks.json' # стек состояний #TODO address -> dir
-ADDRESS_DEPARTMENTS_FULL = 'app/data/Departments.csv' # изначальная таблица отделов
-ADDRESS_DEPARTMENTS = 'app/data/Depertments_changed.json' # таблица отделов
-ADDRESS_PERSONS = 'app/data/persons.json' # таблица соотрудников
-ADDRESS_PERSONS_FULL = 'app/data/persons.xlsx' # изначальная таблица соотрудников
+ADDRESS_STACK = 'autocall/data/UsersStacks.json' # стек состояний #TODO address -> dir
+ADDRESS_DEPARTMENTS_FULL = 'autocall/data/Departments.csv' # изначальная таблица отделов
+ADDRESS_DEPARTMENTS = 'autocall/data/Depertments_changed.json' # таблица отделов
+ADDRESS_PERSONS = 'autocall/data/persons.json' # таблица соотрудников
+ADDRESS_PERSONS_FULL = 'autocall/data/persons.xlsx' # изначальная таблица соотрудников
 
 
 ###-----------------------------------------------------------------------------

@@ -1,5 +1,5 @@
-from app import app
-from app import main, dbParser
+from autocall import app
+from autocall import main, dbParser
 from flask import (
     request,
     session

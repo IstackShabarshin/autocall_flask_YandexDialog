@@ -1,0 +1,15 @@
+[Unit]
+Description=uWSGI instance to serve autocall_flask_YandexDialog
+After=network.target
+After=natasha_parser.service
+
+[Service]
+User=autocall
+Group=www-data
+WorkingDirectory=/home/where-kyfat/autocall_flask_YandexDialog
+Environment="PATH=/home/where-kyfat/autocall_flask_YandexDialog/env/bin"
+ExecStartPre=/home/where-kyfat/autocall_flask_YandexDialog/env/bin/python autocall_preStart.py
+ExecStart=/home/where-kyfat/autocall_flask_YandexDialog/env/bin/uwsgi --ini autocall_flask_YandexDialog.ini
+
+[Install]
+WantedBy=multi-user.target

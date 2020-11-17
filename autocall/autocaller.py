@@ -11,9 +11,9 @@
 from pandas import(
     read_json # для загрузки таблиц из json
 )
-import app.data_parsers as parser # для работы с таблицами таблиц 
-from app.StackFSM import StackFSM # для реализации автомата 
-from app.NatashaParser.natasha_server import (
+import autocall.data_parsers as parser # для работы с таблицами таблиц 
+from autocall.StackFSM import StackFSM # для реализации автомата 
+from natasha_parser.natasha_server import (
     FindNames, # поиск имен в сообщений
     SplitOnSegments, # для разбиения на токены сообщений
     Normalize,  # для приведения к инфинитиву
