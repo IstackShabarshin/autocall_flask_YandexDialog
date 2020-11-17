@@ -221,9 +221,9 @@ def find_department(response):
 ### output: number - номер найденного соотрудника, fio - имя соотрудика
 def find_num_person_from_table(numbers, table):
     for number in numbers:
-        record = table.loc[number]
+        record = table[table.index == number]
         if not record.empty:
-            fio = record['Фамилия'] + ' ' + record['Имя'] + ' ' + record['Отчество']
+            fio = record.iloc[0]['Фамилия'] + ' ' + record.iloc[0]['Имя'] + ' ' + record.iloc[0]['Отчество']
             return number, fio
     return None, None
 
