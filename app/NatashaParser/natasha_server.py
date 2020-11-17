@@ -46,7 +46,6 @@ def FindAddrs(req):
         raise TypeError(resp)
 
 def conn_natasha(req, param):
-    print("Connecting...")
     if os.path.exists(SOCKET_FILE):
         client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 
