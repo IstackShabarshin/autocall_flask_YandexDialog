@@ -18,8 +18,6 @@ from app.NatashaParser.natasha_server import (
     SplitOnSegments, # для разбиения на токены сообщений
     Normalize,  # для приведения к инфинитиву
 )
-#from app.NatashaParser.natasha_server import conn_natasha
-#import json
 
 ###-----------------------------------------------------------------------------
 ### Реализация автомата
@@ -128,11 +126,10 @@ class autocall(StackFSM):
 
         #Теперь ищем FIO
         name_dict = FindNames(request) # парсим на имена через natasha_server
-        print(name_dict, flush=True)
-        
-        number, fio = parser.find_num_person_by_name_from_table(name_dict, table) #To do: только фамилии
-        if fio != None:
-            return self.stateD_connect(number, fio)
+        for name in name_dict:
+            number, fio = parser.find_num_person_by_name_from_table(name, table) #To do: только фамилии
+            if fio != None:
+                return self.stateD_connect(number, fio)
         return "Извините, не удалось найти такого соотрудника"
     
     def stateD_connect(self, number, fio):
