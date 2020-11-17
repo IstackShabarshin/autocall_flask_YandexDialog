@@ -1,55 +1,63 @@
 import os, socket
 import parser
 import json
-#from parser import (
-#    SplitOnSegments,
-#    FindNames,
-#    FindDates,
-#    FindAddrs,
-#    Normalize
-#)
 
 SOCKET_FILE = './tmp/natasha.socket'
+SOCKET_TIMEOUT = 3.0
 
 def SplitOnSegments(string):
-    resp = conn_natasha(string, '-n')
-    resp = json.loads(resp.replace("'", '"'))
-    return resp
-    
-def Normalize(string):
     resp = conn_natasha(string, '-s')
-    resp = json.loads(resp.replace("'", '"'))
-    return resp
-    
-def FindNames(string):
-    resp = conn_natasha(string, '-fn')
-    resp = json.loads(resp.replace("'", '"'))
-    return resp
-    
-def FindDates(string):
-    resp = conn_natasha(string, '-fd')
-    resp = json.loads(resp.replace("'", '"'))
-    return resp
-    
-def FindAddrs(string):
-    resp = conn_natasha(string, '-fa')
-    resp = json.loads(resp.replace("'", '"'))
-    return resp
+    resp = json.loads(resp.replace("\'", '\"'))
+    if type(resp) == type([]):
+        return resp
+    else:
+        raise TypeError(resp)
 
-def conn_natasha(string, param):
+def Normalize(req):
+    resp = conn_natasha(req, '-n')
+    resp = json.loads(resp.replace("\'", '\"'))
+    if type(resp) == type([]):
+        return resp
+    else:
+        raise TypeError(resp)
+
+def FindNames(req):
+    resp = conn_natasha(req, '-fn')
+    resp = json.loads(resp.replace("\'", '\"'))
+    if type(resp) == type([{}]):
+        return resp
+    else:
+        raise TypeError(resp)
+
+def FindDates(req):
+    resp = conn_natasha(req, '-fd')
+    resp = json.loads(resp.replace("\'", '\"'))
+    if type(resp) == type([{}]):
+        return resp
+    else:
+        raise TypeError(resp)
+
+def FindAddrs(req):
+    resp = conn_natasha(req, '-fa')
+    resp = json.loads(resp.replace("\'", '\"'))
+    if type(resp) == type([{}]):
+        return resp
+    else:
+        raise TypeError(resp)
+
+def conn_natasha(req, param):
     print("Connecting...")
     if os.path.exists(SOCKET_FILE):
         client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 
         client.connect(SOCKET_FILE)
         try:
-            client.send(string.encode())
-            client.send(param.encode())
+            client.send(str([req, param]).encode())
 
             resp = client.recv(1024).decode()
+            return resp
         finally:
             client.close()
-            return resp
     else:
         raise FileNotFoundError(SOCKET_FILE)
 
@@ -67,35 +75,41 @@ def start_listennig():
         while True:
             try:
                 conn, _ = server.accept()
-                print("Open new connect", flush=True)
-                string = conn.recv(1024).decode()
-                param = conn.recv(1024).decode()
-                print('    Receving: ' + '\'' + string + '\'' + ' ' + param, flush=True)
+                conn.settimeout(SOCKET_TIMEOUT)
+                message = conn.recv(1024).decode()
+                message = json.loads(message.replace("\'", '\"'))
+                string = message[0]
+                param = message[1]
                 if not string:
                     raise ValueError("string - " + string)
                 if not param:
-                    raise ValueError("param - " + string)
+                    raise ValueError("param - " + param)
 
                 #param parsing
+                log_string = ''
                 if param == '-n': #Normalize
+                    log_string = 'Normalize func out = '
                     request = parser.Normalize(string)
                 elif param == '-s': #Segments
+                    log_string = 'SplitOnSegments func out = '
                     request = parser.SplitOnSegments(string)
                 elif param == '-fn': #FindNames
+                    log_string = 'FindNames func out = '
                     request = parser.FindNames(string)
                 elif param == '-fd': #FindDates
+                    log_string = 'FindDates func out = '
                     request = parser.FindDates(string)
                 elif param == '-fa': #FindAddrs
+                    log_string = 'FindAddrs func out = '
                     request = parser.FindAddrs(string)
                 else:
                     raise ValueError(param)
 
-                for elem in request:
-                    conn.send(str(elem).encode())
-                print('    Sending: ' + str(request), flush=True)
-
+                print('    Sending: '+ log_string + str(request), flush=True)
+                conn.send(str(request).encode())
+            except socket.timeout:
+                print('    Socket timeout', flush=True)
             finally:
-                print("Close connect", flush=True)
                 conn.close()
     finally:
         print("Closing server...");
