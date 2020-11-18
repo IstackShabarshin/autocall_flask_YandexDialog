@@ -1,7 +1,7 @@
 [Unit]
 Description=uWSGI instance to serve autocall_flask_YandexDialog
-After=network.target
-After=natasha_parser.service
+Requires=natasha_parser.service
+After=network.target natasha_parser.service
 
 [Service]
 User=PROJECT_USER
