@@ -4,9 +4,13 @@
 # Requirements:
     ubuntu_server_16.04
     python 3.5
+    python3-pip
     python3-venv
+    
+# Install from bash-script
+    ./install
 
-# Install (all commands from project dir):
+# Install (all commands execute from project dir):
 	Create a new venv python in project direction:
 		python3 -m venv env
         
@@ -28,7 +32,6 @@
                 where PROJECT_USER == name of new user
 
         Change project permissions:
-            chmod -R 770 ./
             sudo chown -R U_ACCOUNT:www-data ./
                 where U_ACCOUNT == name of your account
                 
@@ -50,6 +53,9 @@
     Install nginx:
         sudo apt install nginx
         
+        Open install_packages/nginx/autocall_flask_YandexDialog:
+            Replace PROJECT_DIRECTORY -> global path of project directory
+        
         Copy conf file for nginx:
             sudo cp install_packages/nginx/autocall_flask_YandexDialog /etc/nginx/sites-availabe/
             
@@ -57,7 +63,7 @@
             sudo ln -s /etc/nginx/sites-availabe/autocall_flask_YandexDialog /etc/nginx/sites-enabled
             sudo rm /etc/nginx/sites-enabled/default
                 remove default nginx page
-            sudo systemctl nginx -t
+            sudo nginx -t
                 check that all correct 
             sudo systemctl restart nginx
 # Using:
