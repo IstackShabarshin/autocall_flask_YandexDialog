@@ -31,7 +31,6 @@ sudo useradd $PROJECT_USER -g www-data
 echo "  done!"
 
 echo "changing project permissions..."
-chmod -R 770 ./
 U_ACCOUNT=$(whoami)
 sudo chown -R $U_ACCOUNT:www-data ./
 echo "  done!"
@@ -53,9 +52,9 @@ echo "  done!"
 echo "install nginx..."
 sudo apt install nginx
 echo "  copying conf file for nginx..."
-sudo cp install_packages/nginx/autocall_flask_YandexDialog /etc/nginx/sites-availabe/
+sudo cp install_packages/nginx/autocall_flask_YandexDialog /etc/nginx/sites-available/
 echo "  configuring nginx..."
-sudo ln -s /etc/nginx/sites-availabe/autocall_flask_YandexDialog /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/autocall_flask_YandexDialog /etc/nginx/sites-enabled
 sudo rm /etc/nginx/sites-enabled/default
 remove default nginx page
 sudo systemctl nginx -t
