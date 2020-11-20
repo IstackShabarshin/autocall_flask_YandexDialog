@@ -1,0 +1,68 @@
+#!/bin/bash
+
+echo "Installing autocall_flask_YandexDialog..."
+
+echo "creating a new venv..."
+python3 -m venv env
+echo "  done!"
+
+echo "start installing libs..."
+
+echo "  open venv"
+source env/bin/activate
+  
+echo "  installing and update pip..."
+pip install update
+pip install --upgrade pip
+echo "    done!"
+
+echo "  installing libs from requirements.txt..."
+pip install -r requirements.txt
+echo "    done!"
+
+echo "  close venv"
+deativate
+echo "  done!"
+
+echo "installing systemd..."
+echo "  create new user for executing project:"
+read -p "    Enter user name: " PROJECT_USER
+sudo useradd $PROJECT_USER -g www-data
+echo "  done!"
+
+echo "changing project permissions..."
+chmod -R 770 ./
+U_ACCOUNT=$(whoami)
+sudo chown -R $U_ACCOUNT:www-data ./
+echo "  done!"
+
+echo "changing and copying install_packages/services/*..."
+sed 's/PROJECT_USER/$PROJECT_USER/ ./install_packages/services/autocall_flask_YandexDialog.service > ./install_packages/services/autocall_flask_YandexDialog.service
+sed 's/PROJECT_USER/$PROJECT_USER/ ./install_packages/services/natasha_parser.service > ./install_packages/services/natasha_parser.service
+PROJECT_DIRECTORY=$(pwd)
+sed 's/PROJECT_DIRECTORY/$PROJECT_DIRECTORY ./install_packages/services/autocall_flask_YandexDialog.service > ./install_packages/services/autocall_flask_YandexDialog.service
+sed 's/PROJECT_DIRECTORY/$PROJECT_DIRECTORY ./install_packages/services/natasha_parser.service > ./install_packages/services/natasha_parser.service
+sudo cp install_packages/services/* /etc/systemd/system/
+echo "  done!"
+
+echo "enabling services..."
+sudo systemctl daemon-reload
+sudo systemctl enable autocall_flask_YandexDialog
+echo "  done!"
+            
+echo "install nginx..."
+sudo apt install nginx
+echo "  copying conf file for nginx..."
+sudo cp install_packages/nginx/autocall_flask_YandexDialog /etc/nginx/sites-availabe/
+echo "  configuring nginx..."
+sudo ln -s /etc/nginx/sites-availabe/autocall_flask_YandexDialog /etc/nginx/sites-enabled
+sudo rm /etc/nginx/sites-enabled/default
+remove default nginx page
+sudo systemctl nginx -t
+echo "  done!"
+
+echo "restarting nginx..."
+sudo systemctl restart nginx
+echo "  done!"
+
+echo "Install complete"
