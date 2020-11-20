@@ -21,7 +21,7 @@ pip install -r requirements.txt
 echo "    done!"
 
 echo "  close venv"
-deativate
+deactivate
 echo "  done!"
 
 echo "installing systemd..."
@@ -36,12 +36,15 @@ sudo chown -R $U_ACCOUNT:www-data ./
 echo "  done!"
 
 echo "changing and copying install_packages/services/*..."
-sed 's/PROJECT_USER/$PROJECT_USER/ ./install_packages/services/autocall_flask_YandexDialog.service > ./install_packages/services/autocall_flask_YandexDialog.service
-sed 's/PROJECT_USER/$PROJECT_USER/ ./install_packages/services/natasha_parser.service > ./install_packages/services/natasha_parser.service
+sed 's/PROJECT_USER/$PROJECT_USER/' ./install_packages/services/autocall_flask_YandexDialog_ins.service >> ./install_packages/services/autocall_flask_YandexDialog.service
+sed 's/PROJECT_USER/$PROJECT_USER/' ./install_packages/services/natasha_parser_ins.service >> ./install_packages/services/natasha_parser.service
 PROJECT_DIRECTORY=$(pwd)
-sed 's/PROJECT_DIRECTORY/$PROJECT_DIRECTORY ./install_packages/services/autocall_flask_YandexDialog.service > ./install_packages/services/autocall_flask_YandexDialog.service
-sed 's/PROJECT_DIRECTORY/$PROJECT_DIRECTORY ./install_packages/services/natasha_parser.service > ./install_packages/services/natasha_parser.service
-sudo cp install_packages/services/* /etc/systemd/system/
+sed 's/PROJECT_DIRECTORY/$PROJECT_DIRECTORY'./install_packages/services/autocall_flask_YandexDialog_ins.service >> ./install_packages/services/autocall_flask_YandexDialog.service
+sed 's/PROJECT_DIRECTORY/$PROJECT_DIRECTORY' ./install_packages/services/natasha_parser_ins.service >> ./install_packages/services/natasha_parser.service
+sudo cp install_packages/services/autocall_flask_YandexDialog.service /etc/systemd/system/
+sudo cp install_packages/services/natasha_parser.service /etc/systemd/system/
+rm install_packages/services/autocall_flask_YandexDialog.service
+rm install_packages/services/natasha_parser.serivce
 echo "  done!"
 
 echo "enabling services..."
