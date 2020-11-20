@@ -10,7 +10,7 @@ echo "start installing libs..."
 
 echo "  open venv"
 source env/bin/activate
-  
+
 echo "  installing and update pip..."
 pip install update
 pip install --upgrade pip
@@ -36,32 +36,37 @@ sudo chown -R $U_ACCOUNT:www-data ./
 echo "  done!"
 
 echo "changing and copying install_packages/services/*..."
-sed "s/PROJECT_USER/$PROJECT_USER/" ./install_packages/services/autocall_flask_YandexDialog_ins.service >> ./install_packages/services/autocall_flask_YandexDialog.service
-sed "s/PROJECT_USER/$PROJECT_USER/" ./install_packages/services/natasha_parser_ins.service >> ./install_packages/services/natasha_parser.service
 PROJECT_DIRECTORY=$(pwd)
-sed "s/PROJECT_DIRECTORY/$PROJECT_DIRECTORY"./install_packages/services/autocall_flask_YandexDialog.service >> ./install_packages/services/autocall_flask_YandexDialog1.service
-mv ./install_packages/services/autocall_flask_YandexDialog1.service ./install_packages/services/autocall_flask_YandexDialog.service
-sed "s/PROJECT_DIRECTORY/$PROJECT_DIRECTORY" ./install_packages/services/natasha_parser.service >> ./install_packages/services/natasha_parser1.service
-mv ./install_packages/services/natasha_parser1.service ./install_packages/services/natasha_parser.service
+cp install_packages/services/autocall_flask_YandexDialog_ins.service install_packages/services/autocall_flask_YandexDialog.service
+cp install_packages/services/natasha_parser_ins.service install_packages/services/natasha_parser.service
+sed -i -e "s%PROJECT_USER%${PROJECT_USER}%g; s%PROJECT_DIRECTORY%${PROJECT_DIRECTORY}%g" ./install_packages/services/autocall_flask_YandexDialog.service
+sed -i -e "s%PROJECT_USER%${PROJECT_USER}%g; s%PROJECT_DIRECTORY%${PROJECT_DIRECTORY}%g" ./install_packages/services/natasha_parser.service
 sudo cp -f install_packages/services/autocall_flask_YandexDialog.service /etc/systemd/system/
 sudo cp -f install_packages/services/natasha_parser.service /etc/systemd/system/
 rm install_packages/services/autocall_flask_YandexDialog.service
-rm install_packages/services/natasha_parser.serivce
+rm install_packages/services/natasha_parser.service
 echo "  done!"
 
 echo "enabling services..."
 sudo systemctl daemon-reload
 sudo systemctl enable autocall_flask_YandexDialog
+sudo systemctl start autocall_flask_YandexDialog
 echo "  done!"
-            
+
 echo "install nginx..."
 sudo apt install nginx
 echo "  copying conf file for nginx..."
+cp install_packages/nginx/autocall_flask_YandexDialog_ins install_packages/nginx/autocall_flask_YandexDialog
+sed -i -e "s%PROJECT_DIRECTORY%${PROJECT_DIRECTORY}%g" ./install_packages/nginx/autocall_flask_YandexDialog
 sudo cp -f install_packages/nginx/autocall_flask_YandexDialog /etc/nginx/sites-available/
+rm install_packages/nginx/autocall_flask_YandexDialog
 echo "  configuring nginx..."
-sudo ln -s /etc/nginx/sites-available/autocall_flask_YandexDialog /etc/nginx/sites-enabled
+sudo ln -f -s /etc/nginx/sites-available/autocall_flask_YandexDialog /etc/nginx/sites-enabled
+if [ -f "/etc/nginx/sites-enabled/default" ]
+then
 sudo rm /etc/nginx/sites-enabled/default
-sudo systemctl nginx -t
+fi
+sudo nginx -t
 echo "  done!"
 
 echo "restarting nginx..."

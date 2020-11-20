@@ -1,9 +1,0 @@
-server {
-    listen 80;
-    server_name localhost;
-    
-    location / {
-        include uwsgi_params;
-        uwsgi_pass unix:/PROJECT_DIRECTORY/autocall_flask_YandexDialog/tmp/autocall_flask_YandexDialog.sock;
-    }
-}

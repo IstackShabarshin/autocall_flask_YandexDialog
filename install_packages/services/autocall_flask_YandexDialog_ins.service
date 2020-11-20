@@ -6,10 +6,10 @@ After=network.target natasha_parser.service
 [Service]
 User=PROJECT_USER
 Group=www-data
-WorkingDirectory=/PROJECT_DIRECTORY/autocall_flask_YandexDialog
-Environment="PATH=/PROJECT_DIRECTORY/autocall_flask_YandexDialog/env/bin"
-ExecStartPre=/PROJECT_DIRECTORY/autocall_flask_YandexDialog/env/bin/python autocall_preStart.py
-ExecStart=/PROJECT_DIRECTORY/autocall_flask_YandexDialog/env/bin/uwsgi --ini autocall_flask_YandexDialog.ini
+WorkingDirectory=PROJECT_DIRECTORY/
+Environment="PATH=PROJECT_DIRECTORY/env/bin"
+ExecStartPre=PROJECT_DIRECTORY/env/bin/python autocall_preStart.py
+ExecStart=PROJECT_DIRECTORY/env/bin/uwsgi --ini autocall_flask_YandexDialog.ini
 
 [Install]
 WantedBy=multi-user.target

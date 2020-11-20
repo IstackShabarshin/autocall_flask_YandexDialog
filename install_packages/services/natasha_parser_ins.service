@@ -5,9 +5,9 @@ Before=autocall_flask_YandexDialog.service
 [Service]
 User=PROJECT_USER
 Group=www-data
-Environment="PATH=/PROJECT_DIRECTORY/autocall_flask_YandexDialog/env/bin"
-WorkingDirectory=/PROJECT_DIRECTORY/autocall_flask_YandexDialog
-ExecStart=/PROJECT_DIRECTORY/autocall_flask_YandexDialog/env/bin/python /home/where-kyfat/autocall_flask_YandexDialog/natasha_parser
+Environment="PATH=PROJECT_DIRECTORY/env/bin"
+WorkingDirectory=PROJECT_DIRECTORY/
+ExecStart=PROJECT_DIRECTORY/env/bin/python PROJECT_DIRECTORY/natasha_parser
 
 [Install]
 WantedBy=multi-user.target
