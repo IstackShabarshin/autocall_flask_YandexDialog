@@ -12,6 +12,6 @@ __pycache__
 *.gitignore
 
 # Session files
-/app/data/session.db
+/autocall/data/session.db
 
 # Non-ignoring files-----------------------------------------
