@@ -12,24 +12,24 @@ deleteSession = dbParser.deleteSession
 
 @app.route('/', methods=["GET", "POST"])
 def call():
-    if request.method == "GET":
-        if 'state' in session and len(session['state']) > 0:
-            text = request.args.get('text')
-            if text == None or len(text) == 0:
-                text = 'default'
-            session['state'], resp = main.handler(session['state'][0], text)
-        else:
-            session['state'], resp = main.handler(None, 'hi')
-        session.modified = True
-        return str(resp) + '\n'
-
     if request.method == "POST":
-       data = request.get_json(force=True)
-       return data
-       #if 'user_id' in data:
-          # return {"ok": True}
-       #else:
-          # return {"ok": False}
+        if 'state' in session and len(session['state']) > 0:
+            req_audio = request.get_data()
+            if req_audio == None or len(req_audio) == 0:
+                return {'error': 'not found audio'}
+            session['state'], resp = main.handler(session['state'][0], req_audio, is_audio=True)
+        else:
+            return {'error': 'not found session: maybe y need init GET?'}
+        session.modified = True
+        return resp
+
+    if request.method == "GET":
+        if not 'state' in session:
+            session['state'], resp = main.handler(None, 'hi')
+            session.modified = True
+            return str(resp)
+        else:
+            return {'error': 'not init request: maybe y need POST?'}
 
 @app.route('/del')
 def del_session():
