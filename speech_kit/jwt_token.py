@@ -7,7 +7,7 @@ KEY_ID = "aje77ttk8bl305renr7e" # ID ресурса Key, который прин
 FOLDER_ID = "b1gtpi0rn6jj5s9k7o6o"
 
 
-def IAM_token() {
+def IAM_token():
     with open("keys/speechKey", 'r') as private:
         private_key = private.read() # Чтение закрытого ключа из файла.
 
@@ -43,7 +43,6 @@ def IAM_token() {
 
         for chunk in resp.iter_content(chunk_size=None):
             yield chunk
-}
 
 def synthesize(iam_token, text):
     url = 'https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize'
