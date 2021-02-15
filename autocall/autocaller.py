@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python
 # coding: utf-8
 
@@ -99,7 +100,7 @@ class autocall(StackFSM):
                 self.pushState(self.stateB_dep)
                 self.updateFile()
                 return 'Назовите название или номер отдела'
-            elif word.startswith('соотрудник'):
+            elif word.startswith('Cотрудник'):
                 self.popState()
                 self.pushState(self.stateC_per)
                 self.updateFile()
